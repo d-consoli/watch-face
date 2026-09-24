@@ -17,14 +17,15 @@ def ambient_hide(parent):
     node(parent, "Variant", mode="AMBIENT", target="alpha", value=0)
 
 
-def text(parent, x, y, w, h, size, value, color=INK, expression=False, align="START"):
+def text(parent, x, y, w, h, size, value, color=INK, expression=False, align="START", pattern="%s"):
     p = node(parent, "PartText", x=x, y=y, width=w, height=h)
     t = node(p, "Text", align=align, ellipsis="TRUE", maxLines=1)
     f = node(t, "Font", family=FONT, size=size, color=color)
     if expression:
         template = node(f, "Template")
-        template.text = "%s"
-        node(template, "Parameter", expression=value)
+        template.text = pattern
+        for field in value if isinstance(value, tuple) else (value,):
+            node(template, "Parameter", expression=field)
     else:
         f.text = value
     return p
@@ -77,7 +78,7 @@ def clock_and_date(scene, ambient=False):
     node(g, "Variant", mode="AMBIENT", target="alpha", value=255 if ambient else 0)
     color = "#BAB6AE" if ambient else INK
     p = text(g, 140, 59, 240, 34, 24,
-             "[DAY_OF_WEEK_S] + '  ' + [DAY]", color, expression=True, align="CENTER")
+             ("[DAY_OF_WEEK_S]", "[DAY]"), color, expression=True, align="CENTER", pattern="%s  %s")
     node(p, "Launch", target="CALENDAR")
     clock = node(g, "DigitalClock", x=97, y=99, width=318, height=112)
     t = node(clock, "TimeText", x=0, y=0, width=318, height=112,
@@ -98,9 +99,18 @@ def make_face():
     g = node(scene, "Group", name="battery", x=118, y=211, width=124, height=67)
     ambient_hide(g)
     text(g, 0, 0, 124, 21, 16, "BATTERY", MUTED)
-    p = text(g, 0, 20, 124, 35, 30, "[BATTERY_PERCENT] + '%'", expression=True)
+    p = text(g, 0, 20, 124, 35, 30, "[BATTERY_PERCENT]", expression=True, pattern="%s%%")
     node(p, "Launch", target="BATTERY_STATUS")
     brush(g, 0, 58, 118, BLUE, "clamp([BATTERY_PERCENT] / 100, 0, 1)")
+
+    # Keep labels and the card painting visible even when the OS suppresses an
+    # unconfigured/locked complication altogether. Live values stay in their slots.
+    labels = node(scene, "Group", name="labels", x=0, y=0, width=480, height=480)
+    ambient_hide(labels)
+    text(labels, 272, 211, 124, 21, 16, "KCAL", MUTED)
+    text(labels, 118, 290, 124, 21, 16, "STEPS", MUTED)
+    text(labels, 272, 290, 124, 21, 16, "PULSE · BPM", MUTED)
+    picture(labels, 335, 378, 58, 36, "painted_card")
 
     # Stable IDs for this layout. Wear OS may still retain providers by slot order
     # when upgrading the prototype; configure those slots or add a fresh instance.
@@ -112,7 +122,6 @@ def make_face():
                  "STEP_COUNT" if sid == 102 else "EMPTY", "SHORT_TEXT" if sid == 102 else "EMPTY")
         for kind in TYPES:
             c = node(s, "Complication", type=kind)
-            text(c, 0, 0, 124, 21, 16, label, MUTED)
             text(c, 0, 20, 124, 35, 19 if kind == "EMPTY" else 30, value(kind), expression=True)
             brush(c, 0, 58, 118, RED if sid == 101 else BLUE,
                   progress(kind) if kind in ("RANGED_VALUE", "GOAL_PROGRESS") else None)
@@ -122,7 +131,6 @@ def make_face():
              "RANGED_VALUE", FITBIT+"com.fitbit.complications.heartrate.HeartRateComplicationDataSourceService")
     for kind in ("RANGED_VALUE", "SHORT_TEXT", "EMPTY"):
         c = node(s, "Complication", type=kind)
-        text(c, 0, 0, 124, 21, 16, "PULSE · BPM", MUTED)
         p = picture(c, 0, 28, 28, 28, "painted_heart")
         if kind != "EMPTY":
             # Decorative double beat, not a sensor-synchronized medical pulse.

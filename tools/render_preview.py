@@ -25,8 +25,9 @@ class Preview:
         self.draw = ImageDraw.Draw(self.image)
 
     def value(self, expr, data):
-        if "DAY_OF_WEEK" in expr: return "FRI  25"
-        if "BATTERY_PERCENT" in expr: return "76%"
+        if expr == "[DAY_OF_WEEK_S]": return "FRI"
+        if expr == "[DAY]": return "25"
+        if expr == "[BATTERY_PERCENT]": return "76"
         if expr.startswith("'"): return expr.strip("'")
         field = re.search(r"COMPLICATION\.(TEXT|TITLE)", expr)
         if field:
@@ -61,7 +62,7 @@ class Preview:
                 assert font.getlength(widest) <= w*SCALE, f"Clock clips at {widest}"
             else:
                 t = f.find("Template")
-                label = self.value(t.find("Parameter").get("expression"), data) if t is not None else (f.text or "")
+                label = (t.text or "").strip() % tuple(self.value(p.get("expression"), data) for p in t.findall("Parameter")) if t is not None else (f.text or "")
                 align = el.find("Text").get("align")
             if font.getlength(label) > w*SCALE:
                 while label and font.getlength(label+"…") > w*SCALE: label = label[:-1]
