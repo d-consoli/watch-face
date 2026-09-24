@@ -38,7 +38,7 @@ After installation, long-press the watch face → **Add watch face → Modular L
 
 Long-press → **Edit → Complications** to change any of the five editable slots. For the painted card, select **App shortcut**, then your supermarket-card app, or select that app's own complication. The artwork stays card-shaped; the selected provider owns the tap action. Apps without a complication can normally be selected through the system App shortcut provider.
 
-Health defaults use the Fitbit services discovered on the Pixel Watch 4, with legacy provider fallbacks. Those component names are implementation details and may change after a Fitbit update; use the complication picker if a default stops working. On first use, open Fitbit and complete its setup/permissions. Missing data displays a placeholder, never a fake reading. Existing instances can retain saved providers; see the upgrade step above.
+Health defaults use the Fitbit services discovered on the Pixel Watch 4, with legacy provider fallbacks. Those component names are implementation details and may change after a Fitbit update; use the complication picker if a default stops working. On first use, open Fitbit and complete its setup/permissions. Missing data shows a placeholder or stays blank if Wear OS suppresses an unconfigured/locked slot; readings are never fabricated. Existing instances can retain saved providers; see the upgrade step above.
 
 Bars fill only for actual ranged/goal data. A short-text provider has no numeric range, so it shows a muted track. Calories progress follows Fitbit's range, not an invented calorie target. The heartbeat is a **decorative animation**, not synchronized to individual sensor beats. Fitbit controls the displayed measurement and refresh rate.
 

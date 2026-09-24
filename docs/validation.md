@@ -12,7 +12,7 @@ Environment: Windows 11, Python 3.11, JDK 17, SDK platform 36 / Build Tools 36.0
 - A locked-face screenshot confirmed the painted background, large clock and inset battery/progress geometry on the 426px display. It exposed a WFF expression issue with concatenated weekday/percent text; those have been replaced with multi-parameter/literal-suffix Templates. Labels and card art also now remain visible independently of unavailable complication data.
 - Unlocking is still needed to reconfigure old provider assignments and verify live health/calendar readings, animation and taps. A successful install and loaded runtime are not confirmation of those behaviors.
 
-The 0.2 painted implementation at commit `b0712c2` passed generated XML/image comparisons, official validation, Gradle build, Android lint and both APK checks on [GitHub Actions](https://github.com/d-consoli/watch-face/actions/runs/36067797799). Follow-up runtime text fixes are validated locally and trigger a new CI run. Local Maven downloads have timed out; the SDK-only build works offline.
+The final 0.2 implementation and text fixes at commit `36b786a` passed generated XML/image comparisons, official validation, Gradle build, Android lint and both APK checks on [GitHub Actions](https://github.com/d-consoli/watch-face/actions/runs/36068107640). That same source is installed on the watch. Local Maven downloads have timed out; the SDK-only build works offline.
 
 Still requiring device coverage: first-provider permission/setup behavior; actual calories/steps/pulse and refresh; calendar event/no-event display; card target editing/tap; heartbeat animation; ambient transitions; both round watch sizes and extended battery use. Personal on-device screenshots remain ignored under `captures/`.
 
