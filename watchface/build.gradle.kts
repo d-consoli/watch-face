@@ -14,8 +14,13 @@ android {
         versionName = "0.1.0"
     }
     buildTypes {
+        debug {
+            // Strip AGP-generated resource classes as well: a WFF APK must contain no DEX.
+            isMinifyEnabled = true
+            isShrinkResources = false
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             isShrinkResources = false // WFF references resources from raw XML.
         }
     }
