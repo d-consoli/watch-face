@@ -102,6 +102,11 @@ class Preview:
             if alpha != 255:
                 color = tuple(round(int(color[i:i+2], 16)*alpha/255) for i in (1, 3, 5))
             font = self.font(f)
+            if tag == "TimeText":
+                times = (f"{hour:02}:{minute:02}" for hour in range(24) for minute in range(60))
+                widest = max(times, key=font.getlength)
+                if font.getlength(widest) > w*SCALE:
+                    raise ValueError(f"Clock clips at {widest}; reduce font size or widen TimeText.")
             if circular is None:
                 self.draw.text(self.xy(x+w/2, y+h/2), value, font=font, fill=color, anchor="mm")
             else:

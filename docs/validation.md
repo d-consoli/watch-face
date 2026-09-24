@@ -6,6 +6,7 @@ Checked locally on Windows 11 with JDK 17, Python 3.11, Android platform 36 and 
 - **APK build:** the SDK-only pipeline compiled and linked Android resources, aligned the APK, signed it with the local Android debug key and passed `apksigner verify`.
 - **Packaging:** `tools/check_apk.py` checks for no DEX code, required XML/font/image assets, unique complication IDs, complete supported-type rendering and compatible default providers.
 - **Assets:** images were generated from the checked-in XML and bundled font, then visually reviewed. The first-install preview has empty health slots. The ambient preview contains time and date only. These are approximate layout renders, not Android screenshots.
+- **Clock width:** all 1,440 HH:mm combinations are measured with the bundled font during preview generation. The initial font size clipped at midnight; it was reduced so even the widest time fits inside the clock's bounds.
 - **Reproducibility:** Gradle/AGP/SDK versions, Gradle distribution checksum, validator checksum, font source revision and Python image dependency are recorded. The source XML and images are committed and regenerated in CI to detect drift. Debug APKs are not promised to be byte-for-byte identical across different machines: signing keys and build metadata differ.
 
 Local Gradle dependency resolution could not complete because `dl.google.com` timed out. GitHub Actions provides the separate Gradle build and lint check; consult its actual run status before assuming it passed. The SDK-only APK build does not require those Maven downloads.

@@ -36,7 +36,7 @@
         <DigitalClock x="51" y="113" width="378" height="134">
             <TimeText x="0" y="0" width="378" height="134" format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER">
                 <Variant mode="AMBIENT" target="alpha" value="160" />
-                <Font family="outfit_regular" size="142" color="[CONFIGURATION.palette.0]" />
+                <Font family="outfit_regular" size="128" color="[CONFIGURATION.palette.0]" />
             </TimeText>
         </DigitalClock>
         <ComplicationSlot slotId="1" displayName="edge_top_left" x="0" y="0" width="480" height="480" supportedTypes="SHORT_TEXT RANGED_VALUE GOAL_PROGRESS EMPTY">

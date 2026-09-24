@@ -105,7 +105,8 @@ def make_face():
     time = node(clock, "TimeText", x=0, y=0, width=378, height=134,
                 format="hh:mm", hourFormat="SYNC_TO_DEVICE", align="CENTER")
     node(time, "Variant", mode="AMBIENT", target="alpha", value=160)
-    node(time, "Font", family=FONT, size=142, color=COLOR)
+    # 00:00 is the widest time in Outfit; 128 keeps every 24h value inside 378 units.
+    node(time, "Font", family=FONT, size=128, color=COLOR)
 
     # WFF 2 requires ComplicationSlot to be a direct child of Scene.
     interactive = scene
