@@ -38,10 +38,10 @@ jobs:
         run: ./gradlew :watchface:assembleDebug :watchface:lintDebug --no-daemon
       - name: Verify SDK-only build
         run: python tools/build_apk.py
-      - name: Check resource-only APKs
-        run: |
-          python tools/check_apk.py build/fast/modular-lab-debug.apk
-          python tools/check_apk.py watchface/build/outputs/apk/debug/watchface-debug.apk
+      - name: Check SDK-only APK
+        run: python tools/check_apk.py build/fast/modular-lab-debug.apk
+      - name: Check Gradle APK
+        run: python tools/check_apk.py watchface/build/outputs/apk/debug/watchface-debug.apk
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: modular-lab-debug
