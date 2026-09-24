@@ -59,7 +59,10 @@ class Preview:
         return str(data.get(expr.removeprefix("[COMPLICATION.").removesuffix("]"), ""))
 
     def font(self, el):
-        return ImageFont.truetype(str(FONT), round(float(el.get("size"))*SCALE))
+        # Linux wheels include RAQM while Windows wheels may not. Choose one engine
+        # explicitly so Latin fixture text renders identically on both platforms.
+        return ImageFont.truetype(str(FONT), round(float(el.get("size"))*SCALE),
+                                  layout_engine=ImageFont.Layout.BASIC)
 
     def label(self, el, data):
         t = el.find("Template")

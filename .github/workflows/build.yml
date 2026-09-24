@@ -31,7 +31,7 @@ jobs:
           python -m pip install -r requirements-dev.txt
           python tools/generate_face.py
           python tools/render_preview.py
-          git diff --exit-code -- watchface/src/main/res docs/images
+          python tools/check_generated.py
       - name: Validate with Google's WFF validator
         run: python tools/validate.py
       - name: Assemble and lint
