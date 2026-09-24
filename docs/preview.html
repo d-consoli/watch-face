@@ -2,45 +2,33 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Modular Lab · layout preview</title>
+<title>Modular Lab · Ink & Paper</title>
 <style>
-  :root{color-scheme:dark;font:16px system-ui,sans-serif;background:#14151b;color:#e6e4ee}
-  body{max-width:1000px;margin:0 auto;padding:40px 24px}h1{font-size:32px;font-weight:500;margin-bottom:8px}
-  p{color:#aaa9b7;max-width:660px;line-height:1.6} main{display:flex;gap:56px;align-items:center;flex-wrap:wrap;margin:40px 0}
-  img{width:min(440px,80vw);height:auto;aspect-ratio:1;border-radius:50%;border:2px solid #333442;box-shadow:0 24px 70px #0008}
-  fieldset{border:0;padding:0;margin:24px 0}legend{color:#b4b2c2;margin-bottom:12px}
-  button{border:1px solid #55515f;background:#25232e;color:inherit;border-radius:24px;padding:10px 16px;cursor:pointer;margin-right:6px}
-  button[aria-pressed=true]{background:#dad1fb;color:#201632;border-color:#dad1fb}
-  label{display:block;margin:16px 0}input{accent-color:#b7a5f3}code{font-size:13px;color:#d4c5fa}
+:root{color-scheme:dark;font:16px system-ui,sans-serif;background:#20201e;color:#ece3d3}
+body{max-width:960px;margin:0 auto;padding:40px 24px}h1{font-size:34px;font-weight:500}
+p{max-width:640px;line-height:1.6;color:#b8b3a9}main{display:flex;gap:48px;align-items:center;flex-wrap:wrap;margin:40px 0}
+img{width:min(440px,80vw);border-radius:50%;box-shadow:0 24px 70px #0008}
+button{display:block;border:1px solid #665e50;background:#302c26;color:inherit;border-radius:22px;padding:12px 20px;margin:12px 0;cursor:pointer}
+button[aria-pressed=true]{background:#ece0c8;color:#28231d}code{color:#e1b97d}
 </style>
-<h1>Modular Lab</h1>
-<p>A reproducible starting point for Pixel Watch. Layout preview with sample data; this is not a Wear OS emulator.</p>
+<h1>Ink & Paper</h1>
+<p>Original painted artwork with digital time, Fitbit data and an editable card shortcut. Layout preview with sample values; live rendering is checked on Wear OS.</p>
 <main>
-  <img id="face" src="images/lavender.png" alt="Modular Lab watch face with sample complications">
-  <div>
-    <fieldset><legend>Palette</legend>
-      <button data-palette="lavender" aria-pressed="true">Lavender</button>
-      <button data-palette="lime" aria-pressed="false">Lime</button>
-      <button data-palette="ice" aria-pressed="false">Ice</button>
-    </fieldset>
-    <label><input id="ambient" type="checkbox"> Always-on display</label>
-    <label><input id="empty" type="checkbox"> First install (default palette)</label>
-    <p id="status">Sample data · seven editable slots</p>
-  </div>
+<img id="face" src="images/ink-paper.png" alt="Painted watch face with sample data">
+<div>
+<button data-image="ink-paper" aria-pressed="true">Sample data</button>
+<button data-image="ink-paper-ambient" aria-pressed="false">Always-on</button>
+<button data-image="setup" aria-pressed="false">Missing providers</button>
+<p id="status">Five editable complications.</p>
+</div>
 </main>
-<p>Edit <code>tools/generate_face.py</code>, then run<br><code>python tools/generate_face.py</code><br><code>python tools/render_preview.py</code><br>Refresh this page to see the changes.</p>
-<p>Font positioning, provider icons, live updates, tap targets and locale behavior must be checked on Wear OS.</p>
+<p>Edit <code>tools/generate_face.py</code>, run <code>python tools/generate_face.py</code> and <code>python tools/render_preview.py</code>, then refresh this page. No server needed.</p>
 <script>
-  let palette='lavender';
-  const ambient=document.querySelector('#ambient'),empty=document.querySelector('#empty');
-  function update(){
-    const name=empty.checked?'first-install':palette+(ambient.checked?'-ambient':'');
-    document.querySelector('#face').src='images/'+name+'.png';
-    ambient.disabled=empty.checked;
-    document.querySelector('#status').textContent=empty.checked?'Default providers · other slots await configuration':ambient.checked?'Always-on · time and date only':'Sample data · seven editable slots';
-    document.querySelectorAll('button').forEach(b=>{b.disabled=empty.checked;b.setAttribute('aria-pressed',b.dataset.palette===palette)});
-  }
-  document.querySelectorAll('button').forEach(b=>b.onclick=()=>{palette=b.dataset.palette;update()});
-  ambient.onchange=empty.onchange=update;
+const labels={'ink-paper':'Five editable complications.','ink-paper-ambient':'Time and date only; painting and animation off.','setup':'Placeholders indicate missing providers; no fabricated readings.'};
+document.querySelectorAll('button').forEach(button=>button.onclick=()=>{
+  document.querySelector('#face').src='images/'+button.dataset.image+'.png';
+  document.querySelector('#status').textContent=labels[button.dataset.image];
+  document.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===button));
+});
 </script>
 </html>

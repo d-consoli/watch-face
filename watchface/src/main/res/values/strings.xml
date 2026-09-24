@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="watch_face_name">Modular Lab</string>
-    <string name="colors_label">Palette</string>
-    <string name="lavender">Lavender</string>
-    <string name="lime">Lime</string>
-    <string name="ice">Ice</string>
-    <string name="edge_top_left">Upper left · Steps</string>
-    <string name="edge_top_right">Upper right · Floors</string>
-    <string name="edge_bottom_left">Lower left · Calories</string>
-    <string name="edge_bottom_right">Lower right · Distance</string>
-    <string name="circle_left">Left circle · Weather</string>
-    <string name="circle_right">Right circle · Heart rate</string>
-    <string name="shortcut">Bottom · App shortcut</string>
+    <string name="calories">Calories</string>
+    <string name="steps">Steps</string>
+    <string name="pulse">Heart rate</string>
+    <string name="calendar">Next calendar event</string>
+    <string name="shortcut">Cards · App shortcut</string>
 </resources>

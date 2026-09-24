@@ -58,8 +58,8 @@ def build():
     E.register_namespace("android", ANDROID[1:-1])
     manifest = E.parse(ROOT/"watchface/src/main/AndroidManifest.xml")
     manifest.getroot().set("package", PACKAGE)
-    manifest.getroot().set(ANDROID+"versionCode", "1")
-    manifest.getroot().set(ANDROID+"versionName", "0.1.0")
+    manifest.getroot().set(ANDROID+"versionCode", "2")
+    manifest.getroot().set(ANDROID+"versionName", "0.2.0")
     manifest.find("application").set(ANDROID+"debuggable", "true")
     manifest.write(out/"AndroidManifest.xml", encoding="utf-8", xml_declaration=True)
     run(aapt, "compile", "--dir", ROOT/"watchface/src/main/res", "-o", out/"resources.zip")
@@ -84,12 +84,16 @@ def build():
 
 def select_watch(sdk, serial):
     adb = sdk/"platform-tools"/("adb.exe" if os.name == "nt" else "adb")
+    listing = subprocess.check_output([str(adb), "devices"], text=True)
+    devices = [line.split()[0] for line in listing.splitlines() if line.endswith("\tdevice")]
     if not serial:
-        listing = subprocess.check_output([str(adb), "devices"], text=True)
-        devices = [line.split()[0] for line in listing.splitlines() if line.endswith("\tdevice")]
         if len(devices) != 1:
             raise SystemExit("Connect one watch/emulator, or pass --serial from 'adb devices'.")
         serial = devices[0]
+    if serial not in devices:
+        connected = ", ".join(devices) or "none"
+        raise SystemExit(f"Device '{serial}' is not connected. Connected targets: {connected}.\n"
+                         "Copy the exact serial from 'adb devices -l'; Wi-Fi IP/ports can change.")
     prefix = [str(adb), "-s", serial]
     characteristics = subprocess.check_output(prefix+["shell", "getprop", "ro.build.characteristics"], text=True)
     if "watch" not in characteristics:
@@ -102,7 +106,8 @@ if __name__ == "__main__":
     parser.add_argument("--install", action="store_true", help="Update one connected Wear OS target")
     parser.add_argument("--serial", help="adb device ID, e.g. emulator-5554 or watch IP:connection-port")
     args = parser.parse_args()
+    target = select_watch(find_sdk(), args.serial) if args.install else None
     apk, sdk = build()
     if args.install:
-        run(*select_watch(sdk, args.serial), "install", "-r", apk)
+        run(*target, "install", "-r", apk)
         print("Installed. On the watch: long-press face > Add watch face > Modular Lab.")

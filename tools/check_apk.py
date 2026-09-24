@@ -20,7 +20,7 @@ with zipfile.ZipFile(args.apk) as z:
     assert not any(re.fullmatch(r"classes\d*\.dex", n) for n in names), "WFF must have no runtime bytecode"
     for resource in ("res/raw/watchface.xml", "res/xml/watch_face_info.xml", "res/font/outfit_regular.ttf"):
         assert resource in names, f"Missing {resource}"
-    for image in ("preview.png", "add.png"):
+    for image in ("preview.png", "painted_paper.png", "painted_card.png", "painted_heart.png", "painted_stroke.png"):
         assert any(n.startswith("res/drawable") and n.endswith("/"+image) for n in names), f"Missing {image}"
     face = E.fromstring(z.read("res/raw/watchface.xml"))
     slots = face.findall("Scene/ComplicationSlot")

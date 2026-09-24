@@ -1,25 +1,18 @@
-# Validation record
+# Validation record · 0.2.0
 
-Checked locally on Windows 11 with JDK 17, Python 3.11, Android platform 36 and Build Tools 36.0.0.
+Environment: Windows 11, Python 3.11, JDK 17, SDK platform 36 / Build Tools 36.0.0. Hardware: connected Pixel Watch 4 (meridian_lte), API 37, 426 × 426 display.
 
-GitHub also passed the generated XML/image comparison, official WFF validation, **Gradle APK build + Android lint**, SDK-only build, and inspection of **both APKs** on Ubuntu 24.04 at commit `7844212`. [Build run and downloadable artifacts](https://github.com/d-consoli/watch-face/actions/runs/36060023490).
+- Official Google WFF validator **1.7.0**, format 2: passes.
+- SDK-only AAPT2 build, zip alignment and APK v3 signature verification: passes.
+- APK inspection: no DEX, all required XML/font/painted assets present, unique slots and complete type branches.
+- Hardware install with `python tools/build_apk.py --install --serial 172.20.10.39:43389`: **Success**.
+- Static previews: active, ambient and missing-provider states generated from actual XML. All 1,440 digital times fit the clock width. Pictures use checked-in source rasters, with transparency retained. Preview rendering uses pinned Pillow and explicit BASIC font layout for consistent Windows/Linux pixels.
+- Fitbit default services were discovered on the connected watch. Their installed manifest supports the requested ranged-value types; Calendar supports long text. Modern and legacy Fitbit components are configured as primary/secondary defaults.
+- The watch runtime loaded `io.github.dconsoli.modular 0.2.0 (2)` with all five intended slot policies. However, it remapped slots to internal IDs 11–15 and retained old steps/battery assignments in the first two positions. Changing XML IDs did not reset saved selections. The README documents adding a new instance or reassigning all five slots in Edit.
+- Visual/tap verification is in progress: the watch was locked immediately after installation. A successful install and loaded runtime are not confirmation that every data provider, animation or tap action works.
 
-- **Google WFF validator 1.7.0:** the final XML passes format version 2 with `--stop-on-fail`. The validator also rejected invalid element ordering and invalid slot nesting during development; both were corrected.
-- **APK build:** the SDK-only pipeline compiled and linked Android resources, aligned the APK, signed it with the local Android debug key and passed `apksigner verify`.
-- **Packaging:** `tools/check_apk.py` checks for no DEX code, required XML/font/image assets, unique complication IDs, complete supported-type rendering and compatible default providers.
-- **Assets:** images were generated from the checked-in XML and bundled font, then visually reviewed. The first-install preview has empty health slots. The ambient preview contains time and date only. These are approximate layout renders, not Android screenshots.
-- **Clock width:** all 1,440 HH:mm combinations are measured with the bundled font during preview generation. The initial font size clipped at midnight; it was reduced so even the widest time fits inside the clock's bounds.
-- **Reproducibility:** Gradle/AGP/SDK versions, Gradle distribution checksum, validator checksum, font source revision and Python image dependency are recorded. The source XML and images are committed and regenerated in CI to detect drift. Preview text explicitly uses Pillow's BASIC layout engine on Windows and Linux. CI compares image pixels rather than compressed PNG bytes, because PNG compression libraries vary across platforms. Debug APKs are not promised to be byte-for-byte identical across different machines: signing keys and build metadata differ.
+The previous 0.1 prototype passed Gradle build, Android lint and both APK checks on [GitHub Actions](https://github.com/d-consoli/watch-face/actions/runs/36060023490). That result does not certify the 0.2 layout. Local Maven downloads have timed out; the SDK-only build works offline.
 
-Local Gradle dependency resolution could not complete because `dl.google.com` timed out; the Gradle build and lint were verified successfully on GitHub instead. The SDK-only APK build does not require those Maven downloads. Gradle minification is enabled to remove generated resource classes: inspection caught an unwanted DEX file before this was corrected. Resource shrinking stays disabled so WFF's raw XML references remain intact.
+Still requiring device coverage: first-provider permission/setup behavior; actual calories/steps/pulse and refresh; calendar event/no-event display; card target editing/tap; heartbeat animation; ambient transitions; both round watch sizes and extended battery use. Personal on-device screenshots remain ignored under `captures/`.
 
-No physical watch was connected and no Wear OS emulator was installed in this workspace, so device behavior has **not** been verified. Before treating this as a daily-use face, follow the README to check:
-
-1. Installation, face selection and the built-in editor.
-2. All seven tap targets, provider selection and live updates.
-3. A short-text provider, a ranged-value provider and a goal-progress provider.
-4. Long/empty values, missing provider images and unconfigured slots.
-5. 12/24-hour time, your locale and both round watch sizes.
-6. Always-on entry/exit, text clipping and battery use on the actual watch.
-
-The official XSD validator checks structure, not every runtime expression, provider capability or visual detail. Expressions also follow the official complication sample data-source names and arithmetic-expression reference. The project has not undergone Google Play memory-footprint certification or release publishing checks.
+The validator is structural, not a complete expression/runtime validator. AI artwork is reproduced by using committed originals, not by re-running prompts. Debug APK bytes can differ across build machines because signing keys and metadata differ. Google Play memory certification and release publishing are outside this development build.

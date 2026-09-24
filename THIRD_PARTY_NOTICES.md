@@ -24,4 +24,4 @@ To recreate that static instance, download the pinned variable font and run Font
 
 The public [Modular image in Android Authority's gallery](https://www.androidauthority.com/google-pixel-watch-4-watch-faces-apk-teardown-3603416/) informed the arrangement. It is not included in the repository or APK. This project is not affiliated with Google. Product names identify the test target and visual reference.
 
-The plus icon and all generated preview PNGs are original geometric renders from `tools/render_preview.py`. Demo values are fixtures, not recordings of personal health data.
+The original prototype's geometric plus icon and old previews remain in Git history. Version 0.2 uses original AI-generated raster paintings created with the built-in image generation tool: [source images, exact prompts and checksums](assets/artwork/README.md). The user's commercial-face screenshot was a style reference only and is not redistributed. Build preparation only trims transparent padding and resamples those saved images. Preview data is fictional, not a recording of personal health or calendar information.

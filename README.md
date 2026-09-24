@@ -1,104 +1,50 @@
-# Modular Lab · Pixel Watch
+# Modular Lab · Ink & Paper
 
-A reproducible, independently written recreation of the **Pixel Watch 4 Modular** layout using Google's **Watch Face Format (WFF)**. It has a large digital clock, date pill, four curved edge complications, two circular complications and a bottom shortcut. All seven slots are editable; three palettes and a sparse always-on mode are included.
+A reproducible Pixel Watch face with original painted paper, ink and watercolor artwork. Built with Google's **Watch Face Format 2**: Android renders the XML and raster assets, with no app service or runtime code.
 
-<img src="docs/images/lavender.png" width="320" alt="Modular Lab layout with sample data"> <img src="docs/images/lavender-ambient.png" width="320" alt="Time and date in always-on mode">
+<img src="docs/images/ink-paper.png" width="320" alt="Painted dial with digital time, progress bars, health and calendar data"> <img src="docs/images/ink-paper-ambient.png" width="320" alt="Sparse always-on time and date">
 
-These are generated layout previews with **sample data**, not watch screenshots. [Open the preview](docs/preview.html) locally to compare palettes, ambient mode and first-install appearance.
+These are layout previews using **sample data**, not watch screenshots. [Open the local preview](docs/preview.html) for active, ambient and missing-provider states. Version 0.2 replaces the initial Modular-style prototype; its code and layout remain in Git history.
 
-## Quick start on this Windows PC
+## Fast edit / test loop
 
-Java 17, Python 3.11, Android platform 36, Build Tools 36.0.0 and ADB were already installed when this project was created.
-
-```powershell
-# From the repository root: builds a signed, installable debug APK offline.
-python tools/build_apk.py
-
-# Check WFF syntax. First run downloads Google's checksum-pinned validator.
-python tools/validate.py
-```
-
-APK: **`build/fast/modular-lab-debug.apk`**. This resource-only build uses the SDK's official AAPT2, zipalign and apksigner directly. There are no Python packages or Gradle downloads needed for this path. The resulting APK uses the same package ID and local debug key as the Gradle build.
-
-## Test on your Pixel Watch 4
-
-1. Connect the PC and watch to the same Wi-Fi network.
-2. On the watch, open **Settings → System → About → Versions** and tap **Build number** seven times to enable Developer options. Menu wording can vary with the OS version.
-3. Open **Settings → Developer options**, enable **ADB debugging**, then **Wireless debugging**. Allow the network when prompted.
-4. Under Wireless debugging, tap **Pair new device**. Run the following with the IP and **pairing port** shown there; enter the watch's pairing code when prompted:
-
-   ```powershell
-   adb pair 192.168.1.42:37001
-   ```
-
-5. Return to the main Wireless debugging page. Use its **connection port**, usually different from the pairing port:
-
-   ```powershell
-   adb connect 192.168.1.42:42001
-   adb devices -l
-   python tools/build_apk.py --install --serial 192.168.1.42:42001
-   ```
-
-   The addresses above are examples; replace both ports with those on your watch. Pair once; reconnect if the connection port changes.
-
-6. Long-press the current face on the watch, choose **Add watch face**, find **Modular Lab**, and select it. Long-press → **Edit** to set the palette and complication providers. The face has no launcher activity, so it will not appear as a normal app.
-
-For subsequent edits, repeat only the build/install command. `install -r` updates the existing package and normally preserves the selected providers. If the display has not refreshed, switch to another face and back. Turn wireless debugging off when finished to reduce battery drain.
-
-The scripts refuse to install on a target that does not identify itself as a watch. If more than one device is connected, use `--serial` explicitly.
-
-## Test in a real Wear OS emulator
-
-The local HTML preview is useful for layout, but Android's Wear OS emulator is needed to check actual rendering and editing.
-
-1. Install [Android Studio](https://developer.android.com/studio) and open this repository.
-2. In **SDK Manager**, install Android SDK Platform **36**, Build Tools **36.0.0**, Platform Tools and **Android Emulator**. Use **JDK 17 or newer** (Android Studio's compatible bundled JDK is also suitable).
-3. In **Device Manager → Create Virtual Device**, choose a **Wear OS round** hardware profile. Download a **Wear OS 6 / Android 16 / API 36** image to match the Pixel Watch 4's launch OS. A newer Wear OS image also works. Use the image matching your computer architecture, and enable hardware virtualization if prompted. Do not select a phone image.
-4. Start the emulator and complete its welcome/setup screens. A phone pairing is not needed to sideload this standalone face.
-5. Install and select the face:
-
-   ```powershell
-   adb devices -l
-   python tools/build_apk.py --install --serial emulator-5554
-   ```
-
-   Replace the serial if ADB shows a different one. Long-press the emulator's face → **Add watch face → Modular Lab**.
-
-6. Test **Edit**, the three palettes, 12/24-hour time (system settings), all complication tap targets and always-on display. Enable Always-on screen in the emulator's Display settings and let it enter ambient mode. Repeat on both small and large round profiles for the two watch sizes.
-
-**Android Studio Run:** if your Studio build offers a Wear OS Watch Face run configuration, select the `watchface` module and target. Otherwise use the commands above; a normal Android App configuration trying to launch a default Activity is inappropriate for this resource-only package.
-
-Weather, Fitbit and third-party complication providers may be absent on emulator images. That is expected: configure an available provider, or test those slots on the physical watch. Emulator results do not establish real battery life or Fitbit behavior.
-
-## Customize the face
-
-The editable design source is [`tools/generate_face.py`](tools/generate_face.py). It generates the repeated complication markup into [`watchface/src/main/res/raw/watchface.xml`](watchface/src/main/res/raw/watchface.xml). Edit the generator, then run:
+From the repository root on this Windows PC:
 
 ```powershell
+# After editing tools/generate_face.py:
 python tools/generate_face.py
 python tools/validate.py
-python tools/build_apk.py --install --serial YOUR_DEVICE_SERIAL
+python tools/build_apk.py --install --serial 172.20.10.39:43389
 ```
 
-The canvas is 480 × 480 design units; Wear OS scales it to the actual display. Geometry, colors and text sizes are in the generator. The clock follows the watch's 12/24-hour preference. Date and time use live system data. The watch face itself requests no sensor or location permissions; complications come from the providers you select, which may require their own permissions.
+The last address is the watch connection used during development. **Always copy the current serial from `adb devices -l`.** The IP and wireless connection port can change. A stale address such as `192.168.1.42:43389` will not work when ADB lists `172.20.10.39:43389`. The installer now checks the connection before building and prints the available targets instead of a traceback.
 
-| Slot | Position | Initial provider | Suggested Modular-style choice |
-|---|---|---|---|
-| 1 | Upper-left edge | System steps | Fitbit steps |
-| 2 | Upper-right edge | Watch battery | Floors, if offered by an installed provider |
-| 3 | Lower-left edge | Empty, labeled KCAL | Calories |
-| 4 | Lower-right edge | Empty, labeled DIST | Distance |
-| 5 | Left circle | Empty, labeled WEATHER | Weather temperature |
-| 6 | Right circle | Empty, labeled PULSE | Heart rate |
-| 7 | Bottom circle | Empty, plus icon | App shortcut / supported image complication |
+The APK is `build/fast/modular-lab-debug.apk`. The SDK-only builder uses AAPT2, zipalign and apksigner with your normal local Android debug key. It requires Python 3.10+, JDK 17+, Android platform 36 and Build Tools 36.0.0; it needs no Python dependencies or Maven downloads. These tools were present on this PC. If needed, set `ANDROID_HOME` to the SDK directory.
 
-Slot labels describe the intended layout, not a restriction on the provider. Only providers supporting the slot's data types appear in the system picker. Numeric slots support short text, ranged values and WFF 2 goal progress. Circles also support monochromatic images; the bottom slot supports small images, monochromatic images and short text. Empty health slots show placeholders, never fabricated live readings. A short-text provider has no numeric range, so its arc is decorative; progress arcs move only for ranged/goal data. The bottom plus is an empty-slot marker: configure it through **Edit**, after which the provider supplies its tap action.
+After installation, long-press the watch face → **Add watch face → Modular Lab**. Updates use `install -r`; if the selected face does not refresh, switch to another face and back. Unlock the watch to see the result. **Upgrading the first prototype:** add a fresh Modular Lab instance, or use Edit → Complications to assign Calories, Steps, Heart rate, Next event and Wallet to their labeled slots. This watch's runtime retained old assignments by slot order even after the XML slot IDs changed; the update alone does not reset them.
 
-Always-on mode intentionally displays only the time and date, with dimmer time and no filled date pill. It contains no seconds animation or complication refresh animation.
+## What is on the dial
 
-### Regenerate the images / instant layout preview
+| Area | Data / action |
+|---|---|
+| Top | Weekday and day; tap to open Calendar |
+| Large digits | Digital time following the device's 12/24-hour setting |
+| Battery | Live percentage and painted progress bar; tap the number for battery status |
+| Calories | Fitbit calories and provider-defined progress/goal |
+| Steps | Fitbit steps and progress; system steps fallback |
+| Pulse | Fitbit heart rate and a gently beating painted heart |
+| Bottom | Calendar next-event time/title; tap for the provider's event action |
+| Painted card | Editable app shortcut; Google Wallet by default |
 
-Only image generation needs Pillow. The APK build does not.
+Long-press → **Edit → Complications** to change any of the five editable slots. For the painted card, select **App shortcut**, then your supermarket-card app, or select that app's own complication. The artwork stays card-shaped; the selected provider owns the tap action. Apps without a complication can normally be selected through the system App shortcut provider.
+
+Health defaults use the Fitbit services discovered on the Pixel Watch 4, with legacy provider fallbacks. Those component names are implementation details and may change after a Fitbit update; use the complication picker if a default stops working. On first use, open Fitbit and complete its setup/permissions. Missing data displays a placeholder, never a fake reading. Existing instances can retain saved providers; see the upgrade step above.
+
+Bars fill only for actual ranged/goal data. A short-text provider has no numeric range, so it shows a muted track. Calories progress follows Fitbit's range, not an invented calorie target. The heartbeat is a **decorative animation**, not synchronized to individual sensor beats. Fitbit controls the displayed measurement and refresh rate.
+
+Always-on mode uses a black background with only subdued time/date. Painting, health data and animation are hidden in ambient mode.
+
+## Preview and reproduce the artwork
 
 ```powershell
 python -m pip install -r requirements-dev.txt
@@ -106,43 +52,64 @@ python tools/render_preview.py
 Start-Process .\docs\preview.html
 ```
 
-Or run `powershell -ExecutionPolicy Bypass -File tools/dev.ps1 Preview` to regenerate both XML and images and open the viewer. The preview renderer reads the WFF geometry and palettes but implements only this project's subset. Text baselines and arcs are approximate, provider icons are omitted from fixtures, and there is no touch/sensor/runtime simulation. Confirm the final appearance on Wear OS.
+Preview rendering also prepares the Android artwork from the original PNGs. All paintings, transparency, exact generation prompts and checksums are stored in [assets/artwork](assets/artwork/README.md). Rebuilding uses the saved source images; it does not invoke AI. Prompting an image model again is not pixel-deterministic.
 
-The font, original plus icon, picker preview and documentation images are stored in Git. The generator, fixture data and pinned Pillow version are stored alongside them. Font provenance and licenses are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Edit [tools/generate_face.py](tools/generate_face.py) for layout and data bindings, then regenerate the committed [WFF XML](watchface/src/main/res/raw/watchface.xml). The canvas is 480 × 480 design units and scales to the actual display. [tools/render_preview.py](tools/render_preview.py) reads that XML with fixed fixture data and the bundled Outfit font. It checks all 1,440 clock strings for width. Baselines, animation, provider refresh, editing and taps must still be checked on Wear OS.
 
-### Capture the actual result
+## Connect the watch over Wi-Fi
+
+1. Put the PC and watch on the same reachable Wi-Fi network.
+2. Enable Developer options by tapping **Settings → System → About → Versions → Build number** seven times (wording varies).
+3. Enable **ADB debugging** and **Wireless debugging** under Developer options.
+4. Select **Pair new device**. Run `adb pair WATCH_IP:PAIRING_PORT` and enter the code from the watch.
+5. Return to the main Wireless debugging screen. Run `adb connect WATCH_IP:CONNECTION_PORT`; this is usually a different port.
+6. Run `adb devices -l`, then pass exactly that serial to the install command.
+
+If ADB lists both an IP and an mDNS name, they may represent the same physical watch. Use `--serial` to disambiguate. The installer refuses a target that does not identify as a watch. Pair once; reconnect when the address changes. Turn wireless debugging off after testing to reduce battery use.
+
+## Test in a Wear OS emulator
+
+1. Install [Android Studio](https://developer.android.com/studio) and open this repository.
+2. In SDK Manager, install platform **36**, Build Tools **36.0.0**, Platform Tools and Android Emulator.
+3. In Device Manager, create a **Wear OS round** device with a Wear OS 6 / API 36 image, or a newer Wear OS image. Choose your host CPU architecture and enable virtualization. Start it and finish setup.
+4. Run `adb devices -l`, then:
+
+   ```powershell
+   python tools/build_apk.py --install --serial emulator-5554
+   ```
+
+5. Long-press the emulator's face → **Add watch face → Modular Lab**. Test editing, 12/24-hour format and Always-on screen. Try both small and large round profiles.
+
+Fitbit, Calendar and Wallet may be absent on the emulator. Use available complications there and test the actual providers on the watch. A normal Android App run configuration cannot launch this face: it has no Activity. Use these install commands or Android Studio's Wear OS Watch Face configuration if offered.
+
+## Capture and validate
 
 ```powershell
-python tools/capture.py --serial YOUR_DEVICE_SERIAL
+python tools/capture.py --serial 172.20.10.39:43389
+python tools/check_apk.py build/fast/modular-lab-debug.apk
 ```
 
-This writes a PNG to ignored `captures/`. Copy a chosen capture into `docs/images/` when you want to commit it. The Python helper preserves binary output on Windows PowerShell 5, where redirecting `adb exec-out ... > file.png` can corrupt PNGs.
+Captures go into ignored `captures/` and can contain private health/calendar data. The Python capture helper handles binary PNG output correctly on Windows PowerShell 5.
 
-## Standard Gradle build and GitHub automation
+[Validation notes](docs/validation.md) distinguish checks already completed from hardware checks still needed. Google's validator checks XML structure; a passing validator alone does not prove runtime correctness or battery life.
 
-Pinned toolchain: **Gradle 9.3.1**, **Android Gradle Plugin 9.0.0**, **compile/target SDK 36**, **Build Tools 36.0.0**, **WFF 2**, **minimum API 34 / Wear OS 5**. WFF 2 provides the goal-progress complication type while remaining compatible with Pixel Watch 4. A Compose/Flutter app or legacy watch-face service is unnecessary for this declarative face.
+## Gradle and GitHub builds
+
+Pinned toolchain: Gradle **9.3.1**, AGP **9.0.0**, compile/target SDK **36**, Build Tools **36.0.0**, WFF **2**, minimum API **34 / Wear OS 5**. WFF is Google's supported declarative watch-face framework and fits this resource-only design without Compose or Flutter.
 
 ```powershell
 .\gradlew.bat :watchface:assembleDebug :watchface:lintDebug
-# Output: watchface/build/outputs/apk/debug/watchface-debug.apk
+# watchface/build/outputs/apk/debug/watchface-debug.apk
 ```
 
-On macOS/Linux use `./gradlew`. Set `ANDROID_HOME`, or let Android Studio write the ignored `local.properties`. The wrapper verifies its Gradle distribution SHA-256. The first Gradle build needs internet access to Google's Maven repository and Maven Central. If those downloads time out, use the SDK-only build above.
+On macOS/Linux use `./gradlew`. The wrapper verifies the Gradle distribution checksum. First use needs Maven access; the fast SDK-only path avoids those downloads. Resource shrinking is disabled because WFF references assets inside raw XML; code shrinking removes AGP's generated resource bytecode.
 
-GitHub Actions validates the WFF, checks that generated files are current, runs Android lint, builds APKs and attaches them to the workflow run. Open this repository's **Actions → Build watch face → successful run → Artifacts** to download them. Debug APKs are for sideloading; Play Store publishing and release signing are outside this starter.
+GitHub Actions regenerates XML/images, compares their contents, validates WFF, runs Gradle build/lint, builds via the SDK-only path and verifies both APKs. Download them from **Actions → Build watch face → successful run → Artifacts**. Debug keys are local and untracked: CI and your PC may sign differently. Use the same signing key for updates. Uninstalling to resolve a certificate mismatch clears this face's settings.
 
-Debug signing keys stay on the build machine and are not committed. A GitHub-built APK may have a different certificate from your locally built one. If Android reports `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, use the same build machine/key, or deliberately uninstall **only Modular Lab** (`adb -s SERIAL uninstall io.github.dconsoli.modular`) before installing again; uninstalling clears its configuration. The unsigned Gradle release build requires your signing configuration before distribution.
+## Sources and licenses
 
-## What this reproduces, and what it does not
+- [Watch Face Format](https://developer.android.com/training/wearables/wff), [setup](https://developer.android.com/training/wearables/wff/setup), and [default providers](https://developer.android.com/reference/wear-os/wff/complication/default-provider-policy).
+- [Google's WFF samples](https://github.com/android/wear-os-samples/tree/main/WatchFaceFormat) and [validator/specification](https://github.com/google/watchface/tree/main/third_party/wff).
+- [Wireless debugging](https://developer.android.com/training/wearables/get-started/debug-wifi) and [Wear OS emulator/debugging](https://developer.android.com/training/wearables/get-started/debugging).
 
-This recreates the Modular **arrangement**, not Google's implementation. No public source release for Google's shipping Modular face was found during the source search. No extracted Google APK, Google Sans font, Fitbit icon, Gemini logo or Google screenshot is bundled. Outfit is used as an open font alternative and a neutral plus replaces the stock shortcut symbol. Edge icons, proprietary provider integration, stock animations and exact typography remain differences. The default battery slot is usable without hard-coding private Fitbit component names.
-
-Sources and visual reference:
-
-- [Google: Watch Face Format](https://developer.android.com/training/wearables/wff) and [project setup](https://developer.android.com/training/wearables/wff/setup).
-- [Google's open-source WFF samples](https://github.com/android/wear-os-samples/tree/main/WatchFaceFormat): packaging and supported complication patterns.
-- [Google's WFF validator and specification](https://github.com/google/watchface/tree/main/third_party/wff).
-- [Modular reference image, in Android Authority's Pixel Watch 4 gallery](https://www.androidauthority.com/google-pixel-watch-4-watch-faces-apk-teardown-3603416/), consulted for visual arrangement only; not redistributed.
-- [Google: debugging over Wi-Fi](https://developer.android.com/training/wearables/get-started/debug-wifi) and [Wear OS debugging/emulators](https://developer.android.com/training/wearables/get-started/debugging).
-
-See [validation notes](docs/validation.md) for what was actually checked. Original project code and artwork are Apache-2.0; the bundled font is SIL OFL 1.1.
+The first prototype independently recreated Google's Modular arrangement; no public source for the shipping face was found. This painted version is an original design inspired by the user's reference, with no commercial face assets redistributed. Code/artwork are Apache-2.0 where applicable; Outfit is SIL OFL 1.1. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

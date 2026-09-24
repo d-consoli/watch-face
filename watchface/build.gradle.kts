@@ -10,8 +10,8 @@ android {
         applicationId = "io.github.dconsoli.modular"
         minSdk = 34 // WFF 2: Wear OS 5+, including Pixel Watch 4.
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
     }
     buildTypes {
         debug {
