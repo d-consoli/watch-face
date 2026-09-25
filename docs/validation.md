@@ -6,6 +6,8 @@ The preview renderer now implements WFF group clipping masks, includes a full-ga
 
 This revision passes official WFF 2 validation and the SDK-only APK build/inspection locally. The watch disconnected from ADB during this revision, so 0.3 has not yet been installed or checked on hardware. The 0.2 runtime/provider issues below remain pending a connected, unlocked watch.
 
+Commit `655ea14` also passed the full [GitHub Actions run](https://github.com/d-consoli/watch-face/actions/runs/36111302646): cross-platform generated-file checks, WFF validation, Gradle build and lint, SDK-only build, and inspection of both APKs.
+
 ## Previous hardware evidence · 0.2.0
 
 Environment: Windows 11, Python 3.11, JDK 17, SDK platform 36 / Build Tools 36.0.0. Hardware: connected Pixel Watch 4 (meridian_lte), API 37, 426 × 426 display.
