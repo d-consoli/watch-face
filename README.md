@@ -4,7 +4,7 @@ A reproducible Pixel Watch face with original painted paper, ink and watercolor 
 
 <img src="docs/images/ink-paper.png" width="320" alt="Painted dial with digital time, progress bars, health and calendar data"> <img src="docs/images/ink-paper-ambient.png" width="320" alt="Sparse always-on time and date">
 
-These are layout previews using **sample data**, not watch screenshots. [Open the local preview](docs/preview.html) for active, ambient and missing-provider states. Version 0.2 replaces the initial Modular-style prototype; its code and layout remain in Git history.
+These are layout previews using **sample data**, not watch screenshots. [Open the local preview](docs/preview.html) for active, ambient, full-gauge and missing-provider states. Version 0.3 uses two short **72° edge arcs** (20% of a circle): battery at upper-right and calories at lower-right. Their outer extent stays 13 design units inside the circular display. The left ink painting stays clear; steps uses a numeric count. Earlier layouts remain in Git history.
 
 ## Fast edit / test loop
 
@@ -29,9 +29,9 @@ After installation, long-press the watch face → **Add watch face → Modular L
 |---|---|
 | Top | Weekday and day; tap to open Calendar |
 | Large digits | Digital time following the device's 12/24-hour setting |
-| Battery | Live percentage and painted progress bar; tap the number for battery status |
-| Calories | Fitbit calories and provider-defined progress/goal |
-| Steps | Fitbit steps and progress; system steps fallback |
+| Battery | Blue percentage and upper-right painted arc; tap the number for battery status |
+| Calories | Terracotta calories and lower-right arc for the provider-defined progress/goal |
+| Steps | Fitbit count; system steps fallback |
 | Pulse | Fitbit heart rate and a gently beating painted heart |
 | Bottom | Calendar next-event time/title; tap for the provider's event action |
 | Painted card | Editable app shortcut; Google Wallet by default |
@@ -40,7 +40,7 @@ Long-press → **Edit → Complications** to change any of the five editable slo
 
 Health defaults use the Fitbit services discovered on the Pixel Watch 4, with legacy provider fallbacks. Those component names are implementation details and may change after a Fitbit update; use the complication picker if a default stops working. On first use, open Fitbit and complete its setup/permissions. Missing data shows a placeholder or stays blank if Wear OS suppresses an unconfigured/locked slot; readings are never fabricated. Existing instances can retain saved providers; see the upgrade step above.
 
-Bars fill only for actual ranged/goal data. A short-text provider has no numeric range, so it shows a muted track. Calories progress follows Fitbit's range, not an invented calorie target. The heartbeat is a **decorative animation**, not synchronized to individual sensor beats. Fitbit controls the displayed measurement and refresh rate.
+The calorie arc fills only for actual ranged/goal data. A short-text provider has no numeric range, so its arc stays a muted track. Calories progress follows Fitbit's range, not an invented calorie target. The heartbeat is a **decorative animation**, not synchronized to individual sensor beats. Fitbit controls the displayed measurement and refresh rate.
 
 Always-on mode uses a black background with only subdued time/date. Painting, health data and animation are hidden in ambient mode.
 

@@ -1,4 +1,12 @@
-# Validation record · 0.2.0
+# Validation record · 0.3.0
+
+The perimeter revision replaces the three straight tracks with two painted 72-degree arcs on the right: battery at 12–84 degrees and calories at 96–168 degrees. Steps retains its numeric count. Both arc centerlines use radius 222 on the 480px design canvas, with a 10-unit stroke mask, leaving at least 13 units inside the display edge. No gauge enters the left artwork region.
+
+The preview renderer now implements WFF group clipping masks, includes a full-gauges fixture, and checks padded text/icon bounds against the complete gauge lanes and the round display. The widest of all 1,440 clock strings and the heart's maximum animated size are included. These checks pass for active, ambient, empty and full-gauge previews. The clock, calendar and card were repositioned to preserve clear space.
+
+This revision passes official WFF 2 validation and the SDK-only APK build/inspection locally. The watch disconnected from ADB during this revision, so 0.3 has not yet been installed or checked on hardware. The 0.2 runtime/provider issues below remain pending a connected, unlocked watch.
+
+## Previous hardware evidence · 0.2.0
 
 Environment: Windows 11, Python 3.11, JDK 17, SDK platform 36 / Build Tools 36.0.0. Hardware: connected Pixel Watch 4 (meridian_lte), API 37, 426 × 426 display.
 
