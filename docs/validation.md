@@ -1,29 +1,34 @@
-# Validation record · 0.3.0
+# Validation record · 0.4.0
 
-The perimeter revision replaces the three straight tracks with two painted 72-degree arcs on the right: battery at 12–84 degrees and calories at 96–168 degrees. Steps retains its numeric count. Both arc centerlines use radius 222 on the 480px design canvas, with a 10-unit stroke mask, leaving at least 13 units inside the display edge. No gauge enters the left artwork region.
+Tested on 2026-09-25 with Windows 11, Python 3.11, JDK 17, SDK platform 36 and Build Tools 36.0.0. Hardware: Pixel Watch 4 (meridian_lte), API 37, 426 × 426 display.
 
-The preview renderer now implements WFF group clipping masks, includes a full-gauges fixture, and checks padded text/icon bounds against the complete gauge lanes and the round display. The widest of all 1,440 clock strings and the heart's maximum animated size are included. These checks pass for active, ambient, empty and full-gauge previews. The clock, calendar and card were repositioned to preserve clear space.
+## Layout and data
 
-This revision passes official WFF 2 validation and the SDK-only APK build/inspection locally. The watch disconnected from ADB during this revision, so 0.3 has not yet been installed or checked on hardware. The 0.2 runtime/provider issues below remain pending a connected, unlocked watch.
+- Two 36-degree painted arcs at 8–44 degrees (battery) and 52–88 degrees (steps), measured clockwise from the top. Radius 222 plus half the 10-unit stroke leaves at least 13 design units inside the 480-unit circular display.
+- Battery and footsteps icons use the exact gauge colors. Native colored shapes are masked by the original painting's alpha. Testing exposed that image tint multiplies bitmap RGB, making dark artwork too dark; this mask approach fixes the physical rendering as well as the preview.
+- Steps uses the native daily `STEP_COUNT`. The bar is `clamp(STEP_COUNT / 10000, 0, 1)`. The counter remains uncapped, with one decimal in thousands from 1,000. Cases 0, 999, 1,000, 1,213, 5,000, 10,000, 12,500 and 50,000 are checked by the preview renderer.
+- WFF string literals now use double quotes. A previous single-quoted DecimalFormat pattern produced a literal leading zero on the watch. The final on-device counter correctly displays `1,2k` in the watch's locale, without that zero.
+- Two unlabeled custom slots and calories form a three-column row. Heart/value are centered below it, the calendar has moved right, and the painted card has moved up. The lower-left ink area stays clear.
+- The new middle custom slot is appended after the original five slots to preserve their persisted provider order. It defaults to empty. Six editable slots total.
 
-Commit `655ea14` also passed the full [GitHub Actions run](https://github.com/d-consoli/watch-face/actions/runs/36111302646): cross-platform generated-file checks, WFF validation, Gradle build and lint, SDK-only build, and inspection of both APKs.
-
-## Previous hardware evidence · 0.2.0
-
-Environment: Windows 11, Python 3.11, JDK 17, SDK platform 36 / Build Tools 36.0.0. Hardware: connected Pixel Watch 4 (meridian_lte), API 37, 426 × 426 display.
+## Completed checks
 
 - Official Google WFF validator **1.7.0**, format 2: passes.
 - SDK-only AAPT2 build, zip alignment and APK v3 signature verification: passes.
-- APK inspection: no DEX, all required XML/font/painted assets present, unique slots and complete type branches.
-- Hardware install with `python tools/build_apk.py --install --serial 172.20.10.39:43389`: **Success**.
-- Static previews: active, ambient and missing-provider states generated from actual XML. All 1,440 digital times fit the clock width. Pictures use checked-in source rasters, with transparency retained. Preview rendering uses pinned Pillow and explicit BASIC font layout for consistent Windows/Linux pixels.
-- Fitbit default services were discovered on the connected watch. Their installed manifest supports the requested ranged-value types; Calendar supports long text. Modern and legacy Fitbit components are configured as primary/secondary defaults.
-- The watch runtime loaded `io.github.dconsoli.modular 0.2.0 (2)` with all five intended slot policies. However, it remapped slots to internal IDs 11–15 and retained old steps/battery assignments in the first two positions. Changing XML IDs did not reset saved selections. The README documents adding a new instance or reassigning all five slots in Edit.
-- A locked-face screenshot confirmed the painted background, large clock and inset battery/progress geometry on the 426px display. It exposed a WFF expression issue with concatenated weekday/percent text; those have been replaced with multi-parameter/literal-suffix Templates. Labels and card art also now remain visible independently of unavailable complication data.
-- Unlocking is still needed to reconfigure old provider assignments and verify live health/calendar readings, animation and taps. A successful install and loaded runtime are not confirmation of those behaviors.
+- APK inspection: no DEX; all required XML/font/painted assets present; unique slot IDs and complete branches for supported types.
+- Static previews: active, ambient, missing providers, zero values and above-goal values. Generated from the actual XML, with pinned Pillow and BASIC font layout for consistent Windows/Linux pixels.
+- Geometry checks: padded glyph/icon bounds stay within the round display and outside the full gauge lanes and lower-left ink area. All 1,440 clock strings fit; heart maximum animated size is included.
+- Installation of the final 0.4.0 build through the connected mDNS ADB serial: **Success**.
+- Unlocked hardware screenshots confirm the shorter arcs, matching colors, small edge readings, restored KCAL label, larger row readings, centered heart, shifted calendar/card, and raised battery icon.
+- Existing weather, Fitbit calories/heart rate, Calendar and supermarket-card shortcut assignments were retained. The newly added middle slot appears blank as intended.
+- Successive live screenshots showed changing heart-rate and calorie readings. Eight captured frames yielded seven distinct heart-region images, confirming that the heartbeat animation runs on hardware.
 
-The final 0.2 implementation and text fixes at commit `36b786a` passed generated XML/image comparisons, official validation, Gradle build, Android lint and both APK checks on [GitHub Actions](https://github.com/d-consoli/watch-face/actions/runs/36068107640). That same source is installed on the watch. Local Maven downloads have timed out; the SDK-only build works offline.
+The heartbeat is decorative, not synchronized to individual sensor beats. Native steps and provider health readings follow their respective system/provider refresh cadence. Sample preview values are never shipped as live data.
 
-Still requiring device coverage: first-provider permission/setup behavior; actual calories/steps/pulse and refresh; calendar event/no-event display; card target editing/tap; heartbeat animation; ambient transitions; both round watch sizes and extended battery use. Personal on-device screenshots remain ignored under `captures/`.
+## Remaining coverage
 
-The validator is structural, not a complete expression/runtime validator. AI artwork is reproduced by using committed originals, not by re-running prompts. Debug APK bytes can differ across build machines because signing keys and metadata differ. Google Play memory certification and release publishing are outside this development build.
+First-use provider permissions, changing the new custom slot, shortcut/calendar tap behavior, ambient transitions, the other round watch size and extended battery use have not been fully exercised in this revision. The static ambient fixture passes; it is not a hardware battery-life test. Personal screenshots and runtime dumps remain ignored under `captures/` and `.cache/`.
+
+The validator checks structure rather than all expressions and runtime behavior. Local Maven downloads have timed out, so Gradle build/lint run through the repository's GitHub Actions workflow. CI also regenerates XML/images, validates WFF, builds via the SDK-only path and inspects both APKs. Previous 0.3 passed [this full run](https://github.com/d-consoli/watch-face/actions/runs/36111302646); check the latest commit's Actions status for this revision.
+
+Artwork reproduction uses the committed source images and exact preparation code, not fresh AI generations. Debug APK bytes can differ between machines because signing keys and metadata differ. Google Play memory certification and release publishing are outside this development build.

@@ -4,7 +4,7 @@ A reproducible Pixel Watch face with original painted paper, ink and watercolor 
 
 <img src="docs/images/ink-paper.png" width="320" alt="Painted dial with digital time, progress bars, health and calendar data"> <img src="docs/images/ink-paper-ambient.png" width="320" alt="Sparse always-on time and date">
 
-These are layout previews using **sample data**, not watch screenshots. [Open the local preview](docs/preview.html) for active, ambient, full-gauge and missing-provider states. Version 0.3 uses two short **72° edge arcs** (20% of a circle): battery at upper-right and calories at lower-right. Their outer extent stays 13 design units inside the circular display. The left ink painting stays clear; steps uses a numeric count. Earlier layouts remain in Git history.
+These are layout previews using **sample data**, not watch screenshots. [Open the local preview](docs/preview.html) for active, ambient, zero, above-goal and missing-provider states. Version 0.4 uses two **36° painted arcs** at the top-right: battery and steps, with matching small icons and readings. Their outer extent stays 13 design units inside the circular display. The lower-left ink painting stays clear, and the heart reading is centered below the three-column data row. Earlier layouts remain in Git history.
 
 ## Fast edit / test loop
 
@@ -14,14 +14,15 @@ From the repository root on this Windows PC:
 # After editing tools/generate_face.py:
 python tools/generate_face.py
 python tools/validate.py
-python tools/build_apk.py --install --serial 172.20.10.39:43389
+adb devices -l
+python tools/build_apk.py --install --serial adb-59291WRCVL10MD-FinEdK._adb-tls-connect._tcp
 ```
 
-The last address is the watch connection used during development. **Always copy the current serial from `adb devices -l`.** The IP and wireless connection port can change. A stale address such as `192.168.1.42:43389` will not work when ADB lists `172.20.10.39:43389`. The installer now checks the connection before building and prints the available targets instead of a traceback.
+The mDNS name above is the watch connection used during development. **Always copy the current serial from `adb devices -l`.** The IP and wireless connection port can change. A stale address such as `192.168.1.42:43389` will not work when ADB lists a different address or mDNS name. The installer checks the connection before building and prints the available targets instead of a traceback.
 
 The APK is `build/fast/modular-lab-debug.apk`. The SDK-only builder uses AAPT2, zipalign and apksigner with your normal local Android debug key. It requires Python 3.10+, JDK 17+, Android platform 36 and Build Tools 36.0.0; it needs no Python dependencies or Maven downloads. These tools were present on this PC. If needed, set `ANDROID_HOME` to the SDK directory.
 
-After installation, long-press the watch face → **Add watch face → Modular Lab**. Updates use `install -r`; if the selected face does not refresh, switch to another face and back. Unlock the watch to see the result. **Upgrading the first prototype:** add a fresh Modular Lab instance, or use Edit → Complications to assign Calories, Steps, Heart rate, Next event and Wallet to their labeled slots. This watch's runtime retained old assignments by slot order even after the XML slot IDs changed; the update alone does not reset them.
+After installation, long-press the watch face → **Add watch face → Modular Lab**. Updates use `install -r`; if the selected face does not refresh, switch to another face and back. Unlock the watch to see the result. **Upgrading the first prototype:** use Edit → Complications to assign Calories, a custom center-left provider, Heart rate, Next event and your card app. This watch's runtime retains assignments by slot order even after XML slot IDs change. Version 0.4 preserves that order; an old Steps selection becomes the custom center-left slot, so change it to weather or another provider if desired.
 
 ## What is on the dial
 
@@ -29,18 +30,19 @@ After installation, long-press the watch face → **Add watch face → Modular L
 |---|---|
 | Top | Weekday and day; tap to open Calendar |
 | Large digits | Digital time following the device's 12/24-hour setting |
-| Battery | Blue percentage and upper-right painted arc; tap the number for battery status |
-| Calories | Terracotta calories and lower-right arc for the provider-defined progress/goal |
-| Steps | Fitbit count; system steps fallback |
+| Battery | Blue top arc, small percentage beside it and painted battery icon on its left; tap for battery status |
+| Steps | Terracotta upper-right arc and footprints; full at 10,000 steps, count continues above the goal; tap to open Fitbit |
+| Center left / middle | Two large unlabeled custom complications, such as temperature and sunset; no tracks or bars |
+| Center right | Large calorie count with a small KCAL label |
 | Pulse | Fitbit heart rate and a gently beating painted heart |
 | Bottom | Calendar next-event time/title; tap for the provider's event action |
 | Painted card | Editable app shortcut; Google Wallet by default |
 
-Long-press → **Edit → Complications** to change any of the five editable slots. For the painted card, select **App shortcut**, then your supermarket-card app, or select that app's own complication. The artwork stays card-shaped; the selected provider owns the tap action. Apps without a complication can normally be selected through the system App shortcut provider.
+Long-press → **Edit → Complications** to change any of the six editable slots. Select **Center middle · Custom complication** to assign the new second custom slot; it starts blank. For the painted card, select **App shortcut**, then your supermarket-card app, or select that app's own complication. The artwork stays card-shaped; the selected provider owns the tap action. Apps without a complication can normally be selected through the system App shortcut provider.
 
-Health defaults use the Fitbit services discovered on the Pixel Watch 4, with legacy provider fallbacks. Those component names are implementation details and may change after a Fitbit update; use the complication picker if a default stops working. On first use, open Fitbit and complete its setup/permissions. Missing data shows a placeholder or stays blank if Wear OS suppresses an unconfigured/locked slot; readings are never fabricated. Existing instances can retain saved providers; see the upgrade step above.
+Calorie and heart-rate defaults use the Fitbit services discovered on the Pixel Watch 4, with legacy provider fallbacks. Those component names are implementation details and may change after a Fitbit update; use the complication picker if a default stops working. On first use, open Fitbit and complete its setup/permissions. Missing data shows a placeholder or stays blank if Wear OS suppresses an unconfigured/locked slot; readings are never fabricated. Both custom slots default to empty for new instances and accept text, numeric and image complications. Existing instances retain their saved providers.
 
-The calorie arc fills only for actual ranged/goal data. A short-text provider has no numeric range, so its arc stays a muted track. Calories progress follows Fitbit's range, not an invented calorie target. The heartbeat is a **decorative animation**, not synchronized to individual sensor beats. Fitbit controls the displayed measurement and refresh rate.
+Steps uses WFF's built-in daily `STEP_COUNT`. Only the bar is capped at 10,000. The counter displays whole numbers below 1,000 and one decimal in thousands from 1,000: 1,213 → `1.2k`, 12,500 → `12.5k` (the watch's locale may use a decimal comma). Battery uses the actual device percentage. The heartbeat is a **decorative animation**, not synchronized to individual sensor beats. Fitbit controls the displayed heart-rate measurement and refresh rate.
 
 Always-on mode uses a black background with only subdued time/date. Painting, health data and animation are hidden in ambient mode.
 
@@ -85,7 +87,7 @@ Fitbit, Calendar and Wallet may be absent on the emulator. Use available complic
 ## Capture and validate
 
 ```powershell
-python tools/capture.py --serial 172.20.10.39:43389
+python tools/capture.py --serial adb-59291WRCVL10MD-FinEdK._adb-tls-connect._tcp
 python tools/check_apk.py build/fast/modular-lab-debug.apk
 ```
 

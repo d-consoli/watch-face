@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="watch_face_name">Modular Lab</string>
+    <string name="custom_left">Center left · Custom complication</string>
+    <string name="custom_middle">Center middle · Custom complication</string>
     <string name="calories">Calories</string>
-    <string name="steps">Steps</string>
     <string name="pulse">Heart rate</string>
     <string name="calendar">Next calendar event</string>
     <string name="shortcut">Cards · App shortcut</string>

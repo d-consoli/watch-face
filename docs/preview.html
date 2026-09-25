@@ -18,14 +18,15 @@ button[aria-pressed=true]{background:#ece0c8;color:#28231d}code{color:#e1b97d}
 <div>
 <button data-image="ink-paper" aria-pressed="true">Sample data</button>
 <button data-image="ink-paper-ambient" aria-pressed="false">Always-on</button>
-<button data-image="full-gauges" aria-pressed="false">Full edge gauges</button>
+<button data-image="full-gauges" aria-pressed="false">12.5k steps · full gauges</button>
+<button data-image="zero-gauges" aria-pressed="false">Zero values</button>
 <button data-image="setup" aria-pressed="false">Missing providers</button>
-<p id="status">Five editable complications.</p>
+<p id="status">Two 36° battery/steps arcs; larger center readings and two unlabeled custom slots.</p>
 </div>
 </main>
 <p>Edit <code>tools/generate_face.py</code>, run <code>python tools/generate_face.py</code> and <code>python tools/render_preview.py</code>, then refresh this page. No server needed.</p>
 <script>
-const labels={'ink-paper':'Two short 72° perimeter gauges; five editable complications.','ink-paper-ambient':'Time and date only; painting and animation off.','full-gauges':'Both gauges fully filled, to check their full extent.','setup':'Placeholders indicate missing providers; no fabricated readings.'};
+const labels={'ink-paper':'Two 36° battery/steps arcs; larger center readings and two unlabeled custom slots.','ink-paper-ambient':'Time and date only; painting and animation off.','full-gauges':'12.5k steps: the count continues above 10k while the bar stays full.','zero-gauges':'Zero battery and steps: muted tracks remain, with no filled progress.','setup':'Custom slots stay empty; provider readings are never fabricated.'};
 document.querySelectorAll('button').forEach(button=>button.onclick=()=>{
   document.querySelector('#face').src='images/'+button.dataset.image+'.png';
   document.querySelector('#status').textContent=labels[button.dataset.image];

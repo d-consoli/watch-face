@@ -10,35 +10,47 @@
         </PartImage>
         <Group name="battery_track" x="0" y="0" width="480" height="480">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <PartImage x="0" y="0" width="480" height="480" tintColor="#3F5965" alpha="50">
+            <PartImage x="0" y="0" width="480" height="480" renderMode="MASK" alpha="50">
                 <Image resource="painted_arc" />
             </PartImage>
-            <PartDraw x="0" y="0" width="480" height="480" renderMode="MASK">
-                <Arc centerX="240" centerY="240" width="444" height="444" startAngle="12" endAngle="84">
-                    <Stroke color="#FFFFFF" thickness="10" cap="BUTT" />
+            <PartDraw x="0" y="0" width="480" height="480">
+                <Arc centerX="240" centerY="240" width="444" height="444" startAngle="8" endAngle="44">
+                    <Stroke color="#3F5965" thickness="10" cap="BUTT" />
                 </Arc>
             </PartDraw>
         </Group>
-        <Group name="calories_track" x="0" y="0" width="480" height="480">
+        <Group name="steps_track" x="0" y="0" width="480" height="480">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <PartImage x="0" y="0" width="480" height="480" tintColor="#984832" alpha="50">
+            <PartImage x="0" y="0" width="480" height="480" renderMode="MASK" alpha="50">
                 <Image resource="painted_arc" />
             </PartImage>
-            <PartDraw x="0" y="0" width="480" height="480" renderMode="MASK">
-                <Arc centerX="240" centerY="240" width="444" height="444" startAngle="96" endAngle="168">
-                    <Stroke color="#FFFFFF" thickness="10" cap="BUTT" />
+            <PartDraw x="0" y="0" width="480" height="480">
+                <Arc centerX="240" centerY="240" width="444" height="444" startAngle="52" endAngle="88">
+                    <Stroke color="#984832" thickness="10" cap="BUTT" />
                 </Arc>
             </PartDraw>
         </Group>
         <Group name="battery_progress" x="0" y="0" width="480" height="480">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <PartImage x="0" y="0" width="480" height="480" tintColor="#3F5965" alpha="255">
+            <PartImage x="0" y="0" width="480" height="480" renderMode="MASK" alpha="255">
                 <Image resource="painted_arc" />
             </PartImage>
-            <PartDraw x="0" y="0" width="480" height="480" renderMode="MASK">
-                <Arc centerX="240" centerY="240" width="444" height="444" startAngle="12" endAngle="84">
-                    <Stroke color="#FFFFFF" thickness="10" cap="BUTT" />
-                    <Transform target="endAngle" value="12 + 72 * (clamp([BATTERY_PERCENT] / 100, 0, 1))" />
+            <PartDraw x="0" y="0" width="480" height="480">
+                <Arc centerX="240" centerY="240" width="444" height="444" startAngle="8" endAngle="44">
+                    <Stroke color="#3F5965" thickness="10" cap="BUTT" />
+                    <Transform target="endAngle" value="8 + 36 * (clamp([BATTERY_PERCENT] / 100, 0, 1))" />
+                </Arc>
+            </PartDraw>
+        </Group>
+        <Group name="steps_progress" x="0" y="0" width="480" height="480">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <PartImage x="0" y="0" width="480" height="480" renderMode="MASK" alpha="255">
+                <Image resource="painted_arc" />
+            </PartImage>
+            <PartDraw x="0" y="0" width="480" height="480">
+                <Arc centerX="240" centerY="240" width="444" height="444" startAngle="52" endAngle="88">
+                    <Stroke color="#984832" thickness="10" cap="BUTT" />
+                    <Transform target="endAngle" value="52 + 36 * (clamp([STEP_COUNT] / 10000, 0, 1))" />
                 </Arc>
             </PartDraw>
         </Group>
@@ -54,9 +66,9 @@
                 </Text>
                 <Launch target="CALENDAR" />
             </PartText>
-            <DigitalClock x="89" y="102" width="302" height="110">
-                <TimeText x="0" y="0" width="302" height="110" format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER">
-                    <Font family="outfit_regular" size="100" color="#292724" />
+            <DigitalClock x="91" y="102" width="286" height="110">
+                <TimeText x="0" y="0" width="286" height="110" format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER">
+                    <Font family="outfit_regular" size="94" color="#292724" />
                 </TimeText>
             </DigitalClock>
         </Group>
@@ -72,289 +84,429 @@
                 </Text>
                 <Launch target="CALENDAR" />
             </PartText>
-            <DigitalClock x="89" y="102" width="302" height="110">
-                <TimeText x="0" y="0" width="302" height="110" format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER">
-                    <Font family="outfit_regular" size="100" color="#BAB6AE" />
+            <DigitalClock x="91" y="102" width="286" height="110">
+                <TimeText x="0" y="0" width="286" height="110" format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER">
+                    <Font family="outfit_regular" size="94" color="#BAB6AE" />
                 </TimeText>
             </DigitalClock>
         </Group>
-        <Group name="battery" x="118" y="211" width="124" height="67">
+        <Group name="edge_values" x="0" y="0" width="480" height="480">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <PartText x="0" y="0" width="124" height="21">
+            <Group name="battery_icon" x="231" y="22" width="25" height="15">
+                <PartDraw x="0" y="0" width="25" height="15">
+                    <Rectangle x="0" y="0" width="25" height="15">
+                        <Fill color="#3F5965" />
+                    </Rectangle>
+                </PartDraw>
+                <PartImage x="0" y="0" width="25" height="15" renderMode="MASK">
+                    <Image resource="painted_battery" />
+                </PartImage>
+                <Launch target="BATTERY_STATUS" />
+            </Group>
+            <PartText x="281" y="41" width="51" height="22">
                 <Text align="START" ellipsis="TRUE" maxLines="1">
-                    <Font family="outfit_regular" size="16" color="#3F5965">BATTERY</Font>
-                </Text>
-            </PartText>
-            <PartText x="0" y="20" width="124" height="35">
-                <Text align="START" ellipsis="TRUE" maxLines="1">
-                    <Font family="outfit_regular" size="30" color="#3F5965">
+                    <Font family="outfit_regular" size="16" color="#3F5965">
                         <Template>%s%%<Parameter expression="[BATTERY_PERCENT]" />
                         </Template>
                     </Font>
                 </Text>
                 <Launch target="BATTERY_STATUS" />
             </PartText>
+            <Group name="steps_icon" x="400" y="139" width="22" height="24">
+                <PartDraw x="0" y="0" width="22" height="24">
+                    <Rectangle x="0" y="0" width="22" height="24">
+                        <Fill color="#984832" />
+                    </Rectangle>
+                </PartDraw>
+                <PartImage x="0" y="0" width="22" height="24" renderMode="MASK">
+                    <Image resource="painted_steps" />
+                </PartImage>
+                <Launch target="com.fitbit.FitbitMobile" />
+            </Group>
+            <PartText x="379" y="167" width="67" height="24">
+                <Text align="CENTER" ellipsis="TRUE" maxLines="1">
+                    <Font family="outfit_regular" size="16" color="#984832">
+                        <Template>%s%s<Parameter expression="[STEP_COUNT] &gt;= 1000 ? numberFormat(&quot;0.0&quot;, [STEP_COUNT] / 1000) : numberFormat(&quot;0&quot;, [STEP_COUNT])" />
+                            <Parameter expression="[STEP_COUNT] &gt;= 1000 ? &quot;k&quot; : &quot;&quot;" />
+                        </Template>
+                    </Font>
+                </Text>
+                <Launch target="com.fitbit.FitbitMobile" />
+            </PartText>
         </Group>
         <Group name="labels" x="0" y="0" width="480" height="480">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <PartText x="272" y="211" width="124" height="21">
-                <Text align="START" ellipsis="TRUE" maxLines="1">
-                    <Font family="outfit_regular" size="16" color="#984832">KCAL</Font>
-                </Text>
-            </PartText>
-            <PartText x="118" y="290" width="124" height="21">
-                <Text align="START" ellipsis="TRUE" maxLines="1">
-                    <Font family="outfit_regular" size="16" color="#71665A">STEPS</Font>
-                </Text>
-            </PartText>
-            <PartText x="272" y="290" width="124" height="21">
-                <Text align="START" ellipsis="TRUE" maxLines="1">
-                    <Font family="outfit_regular" size="16" color="#71665A">PULSE · BPM</Font>
-                </Text>
-            </PartText>
-            <PartImage x="318" y="362" width="50" height="31">
+            <PartImage x="335" y="354" width="58" height="36">
                 <Image resource="painted_card" />
             </PartImage>
         </Group>
-        <ComplicationSlot slotId="101" displayName="calories" x="0" y="0" width="480" height="480" supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY">
+        <ComplicationSlot slotId="101" displayName="calories" x="334" y="211" width="110" height="72" supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY LONG_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <BoundingBox x="272" y="211" width="124" height="67" outlinePadding="2" />
-            <DefaultProviderPolicy primaryProvider="com.fitbit.FitbitMobile/com.google.android.wearable.fitbit.mainapp.complications.offloadable.calories.OffloadableCaloriesComplicationDataSourceService" primaryProviderType="RANGED_VALUE" defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" secondaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.calories.CaloriesComplicationDataSourceService" secondaryProviderType="RANGED_VALUE" />
+            <BoundingBox x="0" y="0" width="110" height="72" outlinePadding="2" />
+            <DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" primaryProvider="com.fitbit.FitbitMobile/com.google.android.wearable.fitbit.mainapp.complications.offloadable.calories.OffloadableCaloriesComplicationDataSourceService" primaryProviderType="RANGED_VALUE" secondaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.calories.CaloriesComplicationDataSourceService" secondaryProviderType="RANGED_VALUE" />
             <Complication type="RANGED_VALUE">
-                <PartText x="272" y="231" width="124" height="35">
+                <PartText x="0" y="0" width="110" height="17">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#984832">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat('0', [COMPLICATION.RANGED_VALUE_VALUE])" />
-                            </Template>
-                        </Font>
+                        <Font family="outfit_regular" size="13" color="#71665A">KCAL</Font>
                     </Text>
                 </PartText>
-                <Group name="calories_ranged_value" x="0" y="0" width="480" height="480">
-                    <Variant mode="AMBIENT" target="alpha" value="0" />
-                    <PartImage x="0" y="0" width="480" height="480" tintColor="#984832" alpha="255">
-                        <Image resource="painted_arc" />
-                    </PartImage>
-                    <PartDraw x="0" y="0" width="480" height="480" renderMode="MASK">
-                        <Arc centerX="240" centerY="240" width="444" height="444" startAngle="96" endAngle="168">
-                            <Stroke color="#FFFFFF" thickness="10" cap="BUTT" />
-                            <Transform target="endAngle" value="96 + 72 * ([COMPLICATION.RANGED_VALUE_MAX] &gt; [COMPLICATION.RANGED_VALUE_MIN] ? clamp(([COMPLICATION.RANGED_VALUE_VALUE] - [COMPLICATION.RANGED_VALUE_MIN]) / ([COMPLICATION.RANGED_VALUE_MAX] - [COMPLICATION.RANGED_VALUE_MIN]), 0, 1) : 0)" />
-                        </Arc>
-                    </PartDraw>
-                </Group>
-            </Complication>
-            <Complication type="GOAL_PROGRESS">
-                <PartText x="272" y="231" width="124" height="35">
+                <PartText x="0" y="17" width="110" height="55">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#984832">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat('0', [COMPLICATION.GOAL_PROGRESS_VALUE])" />
-                            </Template>
-                        </Font>
-                    </Text>
-                </PartText>
-                <Group name="calories_goal_progress" x="0" y="0" width="480" height="480">
-                    <Variant mode="AMBIENT" target="alpha" value="0" />
-                    <PartImage x="0" y="0" width="480" height="480" tintColor="#984832" alpha="255">
-                        <Image resource="painted_arc" />
-                    </PartImage>
-                    <PartDraw x="0" y="0" width="480" height="480" renderMode="MASK">
-                        <Arc centerX="240" centerY="240" width="444" height="444" startAngle="96" endAngle="168">
-                            <Stroke color="#FFFFFF" thickness="10" cap="BUTT" />
-                            <Transform target="endAngle" value="96 + 72 * ([COMPLICATION.GOAL_PROGRESS_TARGET_VALUE] &gt; 0 ? clamp([COMPLICATION.GOAL_PROGRESS_VALUE] / [COMPLICATION.GOAL_PROGRESS_TARGET_VALUE], 0, 1) : 0)" />
-                        </Arc>
-                    </PartDraw>
-                </Group>
-            </Complication>
-            <Complication type="SHORT_TEXT">
-                <PartText x="272" y="231" width="124" height="35">
-                    <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#984832">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : '—'" />
-                            </Template>
-                        </Font>
-                    </Text>
-                </PartText>
-            </Complication>
-            <Complication type="EMPTY">
-                <PartText x="272" y="231" width="124" height="35">
-                    <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="19" color="#984832">
-                            <Template>%s<Parameter expression="'SET UP'" />
-                            </Template>
-                        </Font>
-                    </Text>
-                </PartText>
-            </Complication>
-        </ComplicationSlot>
-        <ComplicationSlot slotId="102" displayName="steps" x="118" y="290" width="124" height="67" supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY">
-            <Variant mode="AMBIENT" target="alpha" value="0" />
-            <BoundingBox x="0" y="0" width="124" height="67" outlinePadding="2" />
-            <DefaultProviderPolicy primaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.offloadable.steps.OffloadableStepsComplicationDataSourceService" primaryProviderType="RANGED_VALUE" defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" secondaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.steps.StepsComplicationDataSourceService" secondaryProviderType="RANGED_VALUE" />
-            <Complication type="RANGED_VALUE">
-                <PartText x="0" y="20" width="124" height="35">
-                    <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#292724">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat('0', [COMPLICATION.RANGED_VALUE_VALUE])" />
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat(&quot;0&quot;, [COMPLICATION.RANGED_VALUE_VALUE])" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="GOAL_PROGRESS">
-                <PartText x="0" y="20" width="124" height="35">
+                <PartText x="0" y="0" width="110" height="17">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#292724">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat('0', [COMPLICATION.GOAL_PROGRESS_VALUE])" />
+                        <Font family="outfit_regular" size="13" color="#71665A">KCAL</Font>
+                    </Text>
+                </PartText>
+                <PartText x="0" y="17" width="110" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat(&quot;0&quot;, [COMPLICATION.GOAL_PROGRESS_VALUE])" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="SHORT_TEXT">
-                <PartText x="0" y="20" width="124" height="35">
+                <PartText x="0" y="0" width="110" height="17">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#292724">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : '—'" />
+                        <Font family="outfit_regular" size="13" color="#71665A">KCAL</Font>
+                    </Text>
+                </PartText>
+                <PartText x="0" y="17" width="110" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : &quot;—&quot;" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="EMPTY">
-                <PartText x="0" y="20" width="124" height="35">
+                <PartText x="0" y="0" width="110" height="17">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="19" color="#292724">
-                            <Template>%s<Parameter expression="'SET UP'" />
+                        <Font family="outfit_regular" size="13" color="#71665A">KCAL</Font>
+                    </Text>
+                </PartText>
+                <PartText x="0" y="17" width="110" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724" />
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="LONG_TEXT">
+                <PartText x="0" y="0" width="110" height="17">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="13" color="#71665A">KCAL</Font>
+                    </Text>
+                </PartText>
+                <PartText x="0" y="17" width="110" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="26" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
+            </Complication>
+            <Complication type="MONOCHROMATIC_IMAGE">
+                <PartText x="0" y="0" width="110" height="17">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="13" color="#71665A">KCAL</Font>
+                    </Text>
+                </PartText>
+                <Group name="custom_icon_101" x="0" y="23" width="36" height="36">
+                    <PartDraw x="0" y="0" width="36" height="36">
+                        <Rectangle x="0" y="0" width="36" height="36">
+                            <Fill color="#292724" />
+                        </Rectangle>
+                    </PartDraw>
+                    <PartImage x="0" y="0" width="36" height="36" renderMode="MASK">
+                        <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+                    </PartImage>
+                </Group>
+            </Complication>
+            <Complication type="SMALL_IMAGE">
+                <PartText x="0" y="0" width="110" height="17">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="13" color="#71665A">KCAL</Font>
+                    </Text>
+                </PartText>
+                <PartImage x="0" y="23" width="36" height="36">
+                    <Image resource="[COMPLICATION.SMALL_IMAGE]" />
+                </PartImage>
             </Complication>
         </ComplicationSlot>
-        <ComplicationSlot slotId="103" displayName="pulse" x="272" y="290" width="124" height="67" supportedTypes="RANGED_VALUE SHORT_TEXT EMPTY">
+        <ComplicationSlot slotId="102" displayName="custom_left" x="118" y="228" width="100" height="55" supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY LONG_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <BoundingBox x="0" y="0" width="124" height="67" outlinePadding="2" />
-            <DefaultProviderPolicy primaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.offloadable.heartrate.OffloadableHeartRateComplicationDataSourceService" primaryProviderType="RANGED_VALUE" defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" secondaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.heartrate.HeartRateComplicationDataSourceService" secondaryProviderType="RANGED_VALUE" />
+            <BoundingBox x="0" y="0" width="100" height="55" outlinePadding="2" />
+            <DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" />
             <Complication type="RANGED_VALUE">
-                <PartImage x="0" y="28" width="28" height="28">
-                    <Transform target="scaleY" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
-                    <Transform target="scaleX" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
-                    <Image resource="painted_heart" />
-                </PartImage>
-                <PartText x="39" y="20" width="85" height="39">
+                <PartText x="0" y="0" width="100" height="55">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#984832">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat('0', [COMPLICATION.RANGED_VALUE_VALUE])" />
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat(&quot;0&quot;, [COMPLICATION.RANGED_VALUE_VALUE])" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="GOAL_PROGRESS">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat(&quot;0&quot;, [COMPLICATION.GOAL_PROGRESS_VALUE])" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="SHORT_TEXT">
-                <PartImage x="0" y="28" width="28" height="28">
-                    <Transform target="scaleY" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
-                    <Transform target="scaleX" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
-                    <Image resource="painted_heart" />
-                </PartImage>
-                <PartText x="39" y="20" width="85" height="39">
+                <PartText x="0" y="0" width="100" height="55">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="30" color="#984832">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : '—'" />
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : &quot;—&quot;" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="EMPTY">
-                <PartImage x="0" y="28" width="28" height="28">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724" />
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="LONG_TEXT">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="26" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="MONOCHROMATIC_IMAGE">
+                <Group name="custom_icon_102" x="0" y="6" width="36" height="36">
+                    <PartDraw x="0" y="0" width="36" height="36">
+                        <Rectangle x="0" y="0" width="36" height="36">
+                            <Fill color="#292724" />
+                        </Rectangle>
+                    </PartDraw>
+                    <PartImage x="0" y="0" width="36" height="36" renderMode="MASK">
+                        <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+                    </PartImage>
+                </Group>
+            </Complication>
+            <Complication type="SMALL_IMAGE">
+                <PartImage x="0" y="6" width="36" height="36">
+                    <Image resource="[COMPLICATION.SMALL_IMAGE]" />
+                </PartImage>
+            </Complication>
+        </ComplicationSlot>
+        <ComplicationSlot slotId="103" displayName="pulse" x="202" y="299" width="126" height="63" supportedTypes="RANGED_VALUE SHORT_TEXT EMPTY">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <BoundingBox x="0" y="0" width="126" height="63" outlinePadding="2" />
+            <DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" primaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.offloadable.heartrate.OffloadableHeartRateComplicationDataSourceService" primaryProviderType="RANGED_VALUE" secondaryProvider="com.fitbit.FitbitMobile/com.fitbit.complications.heartrate.HeartRateComplicationDataSourceService" secondaryProviderType="RANGED_VALUE" />
+            <Complication type="RANGED_VALUE">
+                <PartImage x="0" y="21" width="28" height="28">
+                    <Transform target="scaleY" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
+                    <Transform target="scaleX" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
                     <Image resource="painted_heart" />
                 </PartImage>
-                <PartText x="39" y="20" width="85" height="39">
+                <PartText x="38" y="9" width="88" height="45">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="36" color="#984832">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat(&quot;0&quot;, [COMPLICATION.RANGED_VALUE_VALUE])" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartImage x="0" y="21" width="28" height="28">
+                    <Transform target="scaleY" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
+                    <Transform target="scaleX" value="1 + 0.14 * pow(sin([SECOND_MILLISECOND] * 6.283185), 8)" />
+                    <Image resource="painted_heart" />
+                </PartImage>
+                <PartText x="38" y="9" width="88" height="45">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="36" color="#984832">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : &quot;—&quot;" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="EMPTY">
+                <PartImage x="0" y="21" width="28" height="28">
+                    <Image resource="painted_heart" />
+                </PartImage>
+                <PartText x="38" y="9" width="88" height="45">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
                         <Font family="outfit_regular" size="17" color="#984832">
-                            <Template>%s<Parameter expression="'SET UP'" />
+                            <Template>%s<Parameter expression="&quot;SET UP&quot;" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
         </ComplicationSlot>
-        <ComplicationSlot slotId="104" displayName="calendar" x="130" y="367" width="180" height="49" supportedTypes="LONG_TEXT SHORT_TEXT EMPTY">
+        <ComplicationSlot slotId="104" displayName="calendar" x="146" y="392" width="201" height="47" supportedTypes="LONG_TEXT SHORT_TEXT EMPTY">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <BoundingBox x="0" y="0" width="180" height="49" outlinePadding="2" />
-            <DefaultProviderPolicy primaryProvider="com.google.android.calendar/com.google.android.apps.calendar.wear.complication.NextEventComplicationService" primaryProviderType="LONG_TEXT" defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="LONG_TEXT" />
+            <BoundingBox x="0" y="0" width="201" height="47" outlinePadding="2" />
+            <DefaultProviderPolicy defaultSystemProvider="NEXT_EVENT" defaultSystemProviderType="LONG_TEXT" primaryProvider="com.google.android.calendar/com.google.android.apps.calendar.wear.complication.NextEventComplicationService" primaryProviderType="LONG_TEXT" />
             <Complication type="LONG_TEXT">
-                <PartText x="52" y="0" width="128" height="19">
+                <PartText x="0" y="0" width="201" height="19">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="14" color="#71665A">
-                            <Template>%s<Parameter expression="[COMPLICATION.TITLE] != null ? [COMPLICATION.TITLE] : 'NEXT EVENT'" />
+                        <Font family="outfit_regular" size="15" color="#71665A">
+                            <Template>%s<Parameter expression="[COMPLICATION.TITLE] != null ? [COMPLICATION.TITLE] : &quot;NEXT EVENT&quot;" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
-                <PartText x="0" y="23" width="180" height="26">
+                <PartText x="0" y="19" width="201" height="27">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="20" color="#292724">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : 'No events'" />
+                        <Font family="outfit_regular" size="21" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : &quot;No events&quot;" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="SHORT_TEXT">
-                <PartText x="52" y="0" width="128" height="19">
+                <PartText x="0" y="0" width="201" height="19">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="14" color="#71665A">
-                            <Template>%s<Parameter expression="[COMPLICATION.TITLE] != null ? [COMPLICATION.TITLE] : 'NEXT EVENT'" />
+                        <Font family="outfit_regular" size="15" color="#71665A">
+                            <Template>%s<Parameter expression="[COMPLICATION.TITLE] != null ? [COMPLICATION.TITLE] : &quot;NEXT EVENT&quot;" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
-                <PartText x="0" y="23" width="180" height="26">
+                <PartText x="0" y="19" width="201" height="27">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="20" color="#292724">
-                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : 'No events'" />
+                        <Font family="outfit_regular" size="21" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : &quot;No events&quot;" />
                             </Template>
                         </Font>
                     </Text>
                 </PartText>
             </Complication>
             <Complication type="EMPTY">
-                <PartText x="52" y="0" width="128" height="19">
+                <PartText x="0" y="0" width="201" height="19">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="14" color="#71665A">CALENDAR</Font>
+                        <Font family="outfit_regular" size="15" color="#71665A">CALENDAR</Font>
                     </Text>
                 </PartText>
-                <PartText x="0" y="23" width="180" height="26">
+                <PartText x="0" y="19" width="201" height="27">
                     <Text align="START" ellipsis="TRUE" maxLines="1">
-                        <Font family="outfit_regular" size="20" color="#292724">Tap to open</Font>
+                        <Font family="outfit_regular" size="21" color="#292724">Tap to open</Font>
                     </Text>
                     <Launch target="CALENDAR" />
                 </PartText>
             </Complication>
         </ComplicationSlot>
-        <ComplicationSlot slotId="105" displayName="shortcut" x="318" y="360" width="50" height="35" supportedTypes="MONOCHROMATIC_IMAGE SMALL_IMAGE SHORT_TEXT EMPTY">
+        <ComplicationSlot slotId="105" displayName="shortcut" x="335" y="348" width="58" height="49" supportedTypes="MONOCHROMATIC_IMAGE SMALL_IMAGE SHORT_TEXT EMPTY">
             <Variant mode="AMBIENT" target="alpha" value="0" />
-            <BoundingBox x="0" y="0" width="50" height="35" outlinePadding="2" />
-            <DefaultProviderPolicy primaryProvider="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.complications.WearWalletProviderService" primaryProviderType="SMALL_IMAGE" defaultSystemProvider="APP_SHORTCUT" defaultSystemProviderType="MONOCHROMATIC_IMAGE" />
+            <BoundingBox x="0" y="0" width="58" height="49" outlinePadding="2" />
+            <DefaultProviderPolicy defaultSystemProvider="APP_SHORTCUT" defaultSystemProviderType="MONOCHROMATIC_IMAGE" primaryProvider="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.complications.WearWalletProviderService" primaryProviderType="SMALL_IMAGE" />
             <Complication type="MONOCHROMATIC_IMAGE">
-                <PartImage x="0" y="2" width="50" height="31">
+                <PartImage x="0" y="6" width="58" height="36">
                     <Image resource="painted_card" />
                 </PartImage>
             </Complication>
             <Complication type="SMALL_IMAGE">
-                <PartImage x="0" y="2" width="50" height="31">
+                <PartImage x="0" y="6" width="58" height="36">
                     <Image resource="painted_card" />
                 </PartImage>
             </Complication>
             <Complication type="SHORT_TEXT">
-                <PartImage x="0" y="2" width="50" height="31">
+                <PartImage x="0" y="6" width="58" height="36">
                     <Image resource="painted_card" />
                 </PartImage>
             </Complication>
             <Complication type="EMPTY">
-                <PartImage x="0" y="2" width="50" height="31">
+                <PartImage x="0" y="6" width="58" height="36">
                     <Image resource="painted_card" />
                     <Launch target="com.google.android.apps.walletnfcrel" />
+                </PartImage>
+            </Complication>
+        </ComplicationSlot>
+        <ComplicationSlot slotId="106" displayName="custom_middle" x="226" y="228" width="100" height="55" supportedTypes="RANGED_VALUE GOAL_PROGRESS SHORT_TEXT EMPTY LONG_TEXT MONOCHROMATIC_IMAGE SMALL_IMAGE">
+            <Variant mode="AMBIENT" target="alpha" value="0" />
+            <BoundingBox x="0" y="0" width="100" height="55" outlinePadding="2" />
+            <DefaultProviderPolicy defaultSystemProvider="EMPTY" defaultSystemProviderType="EMPTY" />
+            <Complication type="RANGED_VALUE">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat(&quot;0&quot;, [COMPLICATION.RANGED_VALUE_VALUE])" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="GOAL_PROGRESS">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : numberFormat(&quot;0&quot;, [COMPLICATION.GOAL_PROGRESS_VALUE])" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="SHORT_TEXT">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT] != null ? [COMPLICATION.TEXT] : &quot;—&quot;" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="EMPTY">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="34" color="#292724" />
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="LONG_TEXT">
+                <PartText x="0" y="0" width="100" height="55">
+                    <Text align="START" ellipsis="TRUE" maxLines="1">
+                        <Font family="outfit_regular" size="26" color="#292724">
+                            <Template>%s<Parameter expression="[COMPLICATION.TEXT]" />
+                            </Template>
+                        </Font>
+                    </Text>
+                </PartText>
+            </Complication>
+            <Complication type="MONOCHROMATIC_IMAGE">
+                <Group name="custom_icon_106" x="0" y="6" width="36" height="36">
+                    <PartDraw x="0" y="0" width="36" height="36">
+                        <Rectangle x="0" y="0" width="36" height="36">
+                            <Fill color="#292724" />
+                        </Rectangle>
+                    </PartDraw>
+                    <PartImage x="0" y="0" width="36" height="36" renderMode="MASK">
+                        <Image resource="[COMPLICATION.MONOCHROMATIC_IMAGE]" />
+                    </PartImage>
+                </Group>
+            </Complication>
+            <Complication type="SMALL_IMAGE">
+                <PartImage x="0" y="6" width="36" height="36">
+                    <Image resource="[COMPLICATION.SMALL_IMAGE]" />
                 </PartImage>
             </Complication>
         </ComplicationSlot>
